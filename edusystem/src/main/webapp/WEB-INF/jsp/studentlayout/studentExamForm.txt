@@ -1,0 +1,114 @@
+ONLY FOR KNOWLEDGE NOT FOR CODING
+
+
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Exam</title>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+		
+	</head>
+	<body>
+		<div style="margin-left: 50px;">
+			<h3 align="center">Exam Question</h3>
+			<c:forEach var="question" items="${all_question}">
+				<div>
+					<label>Qn :- ${question.question}</label><br />
+					<input type="radio" name="q${question.sl_no}" value="op1" onClick="addAnswer(${question.sl_no},1);">${question.option1}<br />
+					<input type="radio" name="q${question.sl_no}" value="op2" onClick="addAnswer(${question.sl_no},2);">${question.option2}<br />
+					<input type="radio" name="q${question.sl_no}" value="op3" onClick="addAnswer(${question.sl_no},3);">${question.option3}<br />
+					<input type="radio" name="q${question.sl_no}" value="op4" onClick="addAnswer(${question.sl_no},4);">${question.option4}<br />
+					<br /><br />
+				</div>
+			</c:forEach>
+			<form method="post" action="/saveStudentAnswer">
+				<input type="hidden" name="allAnswer" id="txt_answer" />
+				<input type="hidden" name="email" value="<% out.println(session.getAttribute("email")); %>" />
+				<input type="submit" value="Submit Answer" />
+			</form>
+		</div>
+
+		<%--	Java Script code	--%>
+		<script type="text/javascript" src="js/jqcdnlink.js"></script>
+		<script type="text/javascript">
+			var txt_value = document.getElementById('txt_answer');
+			var str = "";
+			function addAnswer (number1,number2){
+				//alert("call..");
+				switch(number2) {
+				case 1:
+				    //alert("Option 1 : Qn "+number1);
+					str = str+"("+number1+":"+number2+"),";
+					txt_value.setAttribute('value',str);
+				    break;
+				case 2:
+				    str = str+"("+number1+":"+number2+"),";
+					txt_value.setAttribute('value',str);
+				    break;
+				case 3:
+				    str = str+"("+number1+":"+number2+"),";
+					txt_value.setAttribute('value',str);
+				    break;
+				case 4:
+				    str = str+"("+number1+":"+number2+"),";
+					txt_value.setAttribute('value',str);
+				    break;
+				default:
+				    alert("Invalid Option..");
+				}
+			}
+		</script>
+	</body>
+</html>
+
+@PostMapping("/saveStudentAnswer")
+public String saveStudentAnswer(@RequestParam("email") String email,
+								@RequestParam("allAnswer") String allAnswer){
+	System.out.println(email); System.out.println(allAnswer);
+	//String sql = "INSERT INTO student_answer (student_id,allAnswer) values (?,?)";
+	//jdbc.update(sql,email,allAnswer);
+	return "redirect:/studentDashboard";
+}
+
+
+<%--
+	<div class="question_box"></div>
+	<style type="text/css">
+		.question_box{
+			background-color: green;
+			border-radius: 25px;
+			opacity: 0.3;
+			height: 175px;
+			width: 500px;
+		}
+	</style>
+--%>
+
+
+@GetMapping("/examCopy")
+public String examCopy(Model model){
+	String sql="SELECT * FROM add_question;";
+	List<Map<String,Object>> all_question = jdbc.queryForList(sql);
+	model.addAttribute("all_question",all_question);
+	return "studentlayout/examCopy";
+}
+@PostMapping("/saveAnswerCopy")
+public String saveAnswerCopy(@ModelAttribute ExamData ed, HttpSession session){
+	//System.out.println(ed.getq1());System.out.println(ed.toString());
+	String email = (String)session.getAttribute("email");
+	String json_txt = ed.toString();
+	String sql = "INSERT INTO add_answer (id,mark) values (?,?)";
+	jdbc.update(sql,email,json_txt);
+	return "redirect:/studentResult";
+}
+
+CREATE TABLE add_answer(id int,mark json);
+INSERT INTO add_answer(id,mark) VALUES (11,'{ "q1": 1, "q2": 2, "q3": 4 }'),(12,'{ "q1": 3, "q2": 1, "q3": 4 }'),(13,'{ "q1": 4, "q2": 2, "q3": 3 }');
+SELECT id,mark->'$.q1' FROM add_answer;
+select id,JSON_VALUE(mark, '$.q3') from add_answer;
+
+ 
