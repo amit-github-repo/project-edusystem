@@ -1,0 +1,15 @@
+com\ems\edusystem\ControllerLayer\AnonymousController$1.class
+com\ems\edusystem\EdusystemApplication.class
+com\ems\edusystem\JpaConectivity\HibernateController.class
+model\ExamData.class
+model\ProductData.class
+model\JsonString.class
+com\ems\edusystem\JpaConectivity\CustomerRepository.class
+com\ems\edusystem\JpaConectivity\CustomerServiceImp.class
+com\ems\edusystem\ControllerLayer\AnonymousController.class
+com\ems\edusystem\ControllerLayer\FacultyController.class
+com\ems\edusystem\ServletInitializer.class
+com\ems\edusystem\ControllerLayer\StudentController.class
+com\ems\edusystem\JpaConectivity\CustomerService.class
+com\ems\edusystem\ControllerLayer\AdminController.class
+com\ems\edusystem\JpaConectivity\CustomerPojo.class
